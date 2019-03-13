@@ -4,21 +4,21 @@ provider "aws" {
   region     = "${var.region}"
 }
 
-resource "aws_vpc" "default" {
+resource "aws_vpc" "healthcheck_lambda_vpc" {
   cidr_block = "172.60.0.0/16"
   tags {
     Name = "yamelnychuk_lab_vpc"
   }
 }
 resource "aws_internet_gateway" "igv" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.healthcheck_lambda_vpc.id}"
   tags {
     Name = "yamelnychuk_lab_igv"
   }
 }
 
 resource "aws_route_table" "internet_access_route" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.healthcheck_lambda_vpc.id}"
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -31,7 +31,7 @@ resource "aws_route_table" "internet_access_route" {
 }
 
 resource "aws_route_table" "private_routing" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.healthcheck_lambda_vpc.id}"
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -44,7 +44,7 @@ resource "aws_route_table" "private_routing" {
 }
 
 resource "aws_subnet" "public_sub" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.healthcheck_lambda_vpc.id}"
   cidr_block = "172.60.31.0/24"
 
   tags {
@@ -53,7 +53,7 @@ resource "aws_subnet" "public_sub" {
 }
 
 resource "aws_subnet" "private_sub" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.healthcheck_lambda_vpc.id}"
   cidr_block = "172.60.32.0/24"
 
   tags {
@@ -72,7 +72,7 @@ resource "aws_route_table_association" "private_routing_association" {
 
 resource "aws_security_group" "public_sg" {
   description = "allow internet access to public subnet"
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.healthcheck_lambda_vpc.id}"
 
   ingress {
     from_port = 80
@@ -95,7 +95,7 @@ resource "aws_security_group" "public_sg" {
 
 resource "aws_security_group" "privat_sg" {
   description = "allow internet access to private subnet"
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.healthcheck_lambda_vpc.id}"
 
   ingress {
     from_port = 80
