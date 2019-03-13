@@ -28,7 +28,9 @@ resource "aws_iam_policy" "db_policy" {
         {
             "Action": [
                 "dynamodb:*",
+<<<<<<< HEAD
                 "cloudwatch:PutMetricAlarm"
+>>>>>>> 5c6460c9054289758cb6899494f2acec8318cd35
             ],
             "Effect": "Allow",
             "Resource": "*"
