@@ -28,9 +28,7 @@ resource "aws_iam_policy" "db_policy" {
         {
             "Action": [
                 "dynamodb:*",
-<<<<<<< HEAD
                 "cloudwatch:PutMetricAlarm"
->>>>>>> 5c6460c9054289758cb6899494f2acec8318cd35
             ],
             "Effect": "Allow",
             "Resource": "*"
@@ -81,7 +79,11 @@ resource "aws_iam_policy" "vpc_policy" {
     "Statement": [
         {
             "Effect": "Allow",
-            "Action": [],
+            "Action": [
+                "ec2:CreateNetworkInterface", 
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface"
+            ],
             "Resource": "*"
         }
     ]
