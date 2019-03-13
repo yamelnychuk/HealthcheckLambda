@@ -128,12 +128,18 @@ resource "aws_nat_gateway" "natgw" {
   }
 }
 
+data "archive_file" "function-zip" {
+  type        = "zip"
+  source_file = "${path.module}/handler.py"
+  output_path = "${path.module}/yamel-lambda-healthcheck.zip"
+}
+
 resource "aws_lambda_function" "healthcheck_lambda" {
   filename         = "yamel-lambda-healthcheck.zip"
   function_name    = "healthcheck_lambda"
   role             = "${aws_iam_role.lambda_role.arn}"
   handler          = "handler.healthcheck"
-  source_code_hash = "${base64sha256(file("yamel-lambda-healthcheck.zip"))}"
+  source_code_hash = "${data.archive_file.function-zip.output_base64sha256}"
   runtime          = "python3.7"
   vpc_config {
     subnet_ids = ["${aws_subnet.private_sub.id}"]
